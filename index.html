@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Password</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/material.css">
+    <link rel="stylesheet" href="assets/css/toastr.css">
+</head>
+<body>
+    <div class="secure-password-popup">
+        <div class="form-container login-section">
+            <h1>Login</h1>
+    
+            <label for="email"><b>Email</b></label>
+            <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email">
+            <br>
+    
+            <label for="psw"><b>Password</b></label>
+            <input class="form-control" type="password" placeholder="Enter Password" name="psw" id="password">
+            <br>
+            
+            <button type="submit" class="btn bg-gradient-primary" id="loginbtn">Login</button>
+        </div>
+        <div class="form-container welcome-section">
+            <h1 id="welcome-heading">SECURE PASS</h1>
+            <button id="logout" class="btn bg-gradient-warning">Logout</button>
+            <button type="submit" class="btn bg-gradient-primary" id="loadCreds">Load Credentials</button>
+            <table class="table" id="table1">
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+            
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/toastr.js"></script>
+<script src="assets/js/script.js"></script>
+</html>

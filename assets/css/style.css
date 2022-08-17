@@ -1,0 +1,171 @@
+
+.secure-password-popup{
+    width: 500px;
+   padding: 20px;
+}
+
+.secure-pass-btn{
+    background: #e12c6c;
+    border: solid 2px #e12c6c;
+    color: #fff;
+    padding: 5px 14px;
+}
+.secure-pass-btn:hover{
+    background: #fff;
+    border: solid 2px #e12c6c;
+    color: #e12c6c;
+    padding: 5px 14px;
+}
+
+.secure-pass-btns-section{
+    margin-top: 30px;
+    border-top: solid 1px #e12c6c;
+    padding: 12px;
+}
+
+/* .form-control{
+    border: solid 1px #e53572 !important;
+    padding: 0.5rem 10px !important;
+} */
+
+/* The Modal (background) */
+.secure-pass-modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+.secure-pass-modal-header{
+    background: gray;
+    color: #fff;
+    padding: 12px;
+}
+
+/* Modal Content */
+.secure-pass-modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+}
+
+/* The Close Button */
+.secure-pass-close {
+    color: #fff;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: -2px;
+    background: #be1104;
+    border-radius: 50%;
+    padding: 0px 4px;
+}
+
+.secure-pass-close:hover,
+.secure-pass-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.secure-pass-form {
+    display: flex;
+    justify-content: center;
+}
+
+.secure-pass-input {
+    border: solid 1px #d63384;
+    width: 50%;
+    height: 30px;
+    border-radius: 5px;
+    margin-top: 40px;
+    padding: 10px;
+}
+
+#secure-pass-snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#secure-pass-snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
