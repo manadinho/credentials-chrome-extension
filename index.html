@@ -8,41 +8,300 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/material.css">
     <link rel="stylesheet" href="assets/css/toastr.css">
+    <script src="assets//js/tailwind.js"></script>
+    <script src="assets/js/alpine.js" defer></script>
 </head>
 <body>
     <div class="secure-password-popup">
-        <div class="form-container login-section">
-            <h1>Login</h1>
+        <div class="form-container login-section bg-white-700 p-5 rounded-md shadow border-1" x-data="alpineLoginData">
+            <h1 class="text-gray-900 font-bold text-lg">Login</h1>
+            <hr class="mt-2">
     
-            <label for="email"><b>Email</b></label>
-            <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email">
+            <label class="text-gray-900 mt-5" for="email"><b>Email</b></label>
+            <input x-model="email" class="form-control bg-white-900 text-gray-900 border shadow-lg px-2" type="text" placeholder="Enter Email" name="email" id="email">
             <br>
     
-            <label for="psw"><b>Password</b></label>
-            <input class="form-control" type="password" placeholder="Enter Password" name="psw" id="password">
+            <label class="text-gray-900" for="psw"><b>Password</b></label>
+            <input x-model="password" class="form-control bg-white-900 text-gray-900 border shadow-lg px-2" :type="!isTypePassword ? 'password' : 'text'" placeholder="Enter Password" name="psw" id="password">
+            <label class="text-gray-900 mt-2">Show Password <input type="checkbox" x-model="isTypePassword" id=""></label>
             <br>
             
-            <button type="submit" class="btn bg-gradient-primary" id="loginbtn">Login</button>
+            <button type="submit" @click="login" class="btn bg-gray-900 text-white shadow-2xl mt-4" x-bind:disabled="loading" id="loginbtn" x-text="loading ? 'Loading...' : 'LOGIN'"></button>
         </div>
-        <div class="form-container welcome-section">
-            <h1 id="welcome-heading">SECURE PASS</h1>
-            <button id="logout" class="btn bg-gradient-warning">Logout</button>
-            <button type="submit" class="btn bg-gradient-primary" id="loadCreds">Load Credentials</button>
-            <table class="table" id="table1">
-                <thead>
-                    <tr>
-                        <th>Platform</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-            
-                </tbody>
-            </table>
+        <div class="welcome-section" x-data="alpineDashboardData">
+            <div class="flex justify-around">
+                <button @click="changeRoute('credentials')" :class="activeRoute === 'credentials' ? 'border-1 bg-gray-900 text-white rounded px-4 py-2 shadow-md' : 'border-1 bg-[#fff] rounded px-4 py-2 shadow-md'">CREDENTIALS</button>
+                <button @click="changeRoute('commands')" :class="activeRoute === 'commands' ? 'border-1 bg-gray-900 text-white rounded px-4 py-2 shadow-md' : 'border-1 bg-[#fff] rounded px-4 py-2 shadow-md'">COMMANDS</button>
+                <button class="border-1 bg-[#fff] rounded px-4 py-2 shadow-md" @click="logout">LOGOUT</button>
+            </div>
+
+            <div class="form-container bg-white-700 p-5 rounded-md shadow mt-2 border-1" x-show="activeRoute === 'credentials'">
+                <h1 class="text-gray-900 font-bold ">CREDENTIALS</h1>
+                <hr class="mt-2">
+                <button type="submit" class="btn mt-5 bg-gray-900 text-white" id="loadCreds" @click="loadCredentials">Load Credentials</button>
+                <table class="table" id="table1">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="cred in _credentials">
+                            <tr>
+                                <td>
+                                    <span class="flex">
+                                        <img style="width: 20px; height:20px" class="rounded-full shadow-md" :src="cred.plateform.favicon ?? './assets/images/logo.png'" alt="">
+                                        <span class="px-1" x-text="cred.title"></span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a :href="cred.url" class="bg-gray-900 text-white px-2 py-1 rounded" target="_blank">Launch</a>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-container bg-white-700 p-5 rounded-md shadow mt-2 border-1" x-show="activeRoute === 'commands'">
+                <h1 class="text-gray-900 font-bold">COMMANDS</h1>
+                <hr class="mt-2">
+                <div class="flex justify-start space-x-1">
+                    <button type="submit" class="btn mt-5 bg-gray-900 text-white" id="loadCreds" @click="loadCommands">
+                        REFRESH
+                    </button>
+                    <button type="submit" class="btn mt-5 bg-gray-900 text-white" id="loadCreds" @click="loadCredentials">+ Add</button>
+                </div>
+                <input @keyup="search()" x-model="searchString" type="text" class=" border-1 rounded shadow p-2 w-full" placeholder="Search">
+                <template x-for="command in _commands">
+                    <div class="border-1 p-2 mt-4">
+                        <h3 class="text-gray-900 font-bold" x-text="command.title"></h3>
+                        <div
+                            class="relative overflow-hidden shadow-xl flex bg-slate-800  sm:rounded-xl  dark:bg-slate-900/70 dark:backdrop-blur dark:ring-1 dark:ring-inset dark:ring-white/10">
+                            <div class="relative w-full flex flex-col">
+                                <div class="flex-none border-b border-slate-500/30">
+                                    <div class="flex items-center h-8 space-x-1.5 px-3">
+                                        <div class="w-2.5 h-2.5 bg-red-400 rounded-full"></div>
+                                        <div class="w-2.5 h-2.5 bg-yellow-400 rounded-full"></div>
+                                        <div class="w-2.5 h-2.5 bg-green-600 rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div class="relative min-h-0 flex-auto flex flex-col">
+                                    <div class="w-full flex-auto flex min-h-0" style="opacity:1">
+                                        <div class="w-full flex-auto flex min-h-0 overflow-auto">
+                                            <div class="w-full relative flex-auto text-white p-5">
+                                                <p x-text="command.command"></p>
+                                                <span @click="copyCommand(command.command)" class="fa fa-copy hover:cursor-pointer px-5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                    stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                                </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-row mt-2">
+                            <div class="mt-1">
+                                <span class="px-2 py-1 border text-gray-900 rounded shadow">Edit</span>
+                            </div>
+                            <div style="margin-left: auto;">
+                                <span class="flex justify-end">
+                                    <img style=" width:30px; height:30px" class="shadow-lg rounded-full" :src="command.user.avatar" alt="avatar">
+                                    <span class="text-slate-800 mt-2 px-2" style="font-size: 8px;" x-text="command.user.email"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
 </body>
+<script>
+    // const baseUrl = "http://staging.denontek.com.pk/api/";
+    const baseUrl = "http://127.0.0.1:8000/api/";
+    let token = localStorage.getItem('_token');
+    isUserLogin();
+
+
+    function alpineLoginData() {
+        return {
+            loading: false,
+            email: '',
+            password: '',
+            isTypePassword: false,
+            async login() {
+                if (this.email === '' || this.password === '') {
+                    toastr.error('Please Enter Credentials');
+                    return;
+                }
+
+                this.loading = true;
+                fetch(`${baseUrl}login`, {
+                    method: "post",
+                    body: JSON.stringify({
+                        email: this.email,
+                        password: this.password,
+                    }),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(async (res) => {
+                        this.loading = false
+                        const response = await res.json();
+                        if (response.success) {
+                            toastr.success("Login successfull");
+                            token = response.access_token;
+                            localStorage.setItem('_token', response.access_token)
+                            localStorage.setItem('user', JSON.stringify(response.user))
+                            isUserLogin();
+                            fetchCredentials();
+                            fetchCommands();
+                        } else {
+                            toastr.error("Credentials are not correct");
+                        }
+
+                        return Promise.resolve('alert');
+                    })
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+            },
+        }
+    }
+
+    function alpineDashboardData() {
+        return {
+            searchString: '',
+            credentials: localStorage.getItem('credentials'),
+            commands: localStorage.getItem('commands'),
+            activeRoute: 'credentials',
+            logout() {
+                token = null;
+                localStorage.setItem('_token', null);
+                localStorage.setItem('user', null);
+                isUserLogin();
+
+            },
+
+            get _credentials() {
+                if (this.credentials) {
+                    return JSON.parse(this.credentials)
+                }
+
+                return [];
+            },
+            
+            get _commands() {
+                if (this.commands) {
+                    return JSON.parse(this.commands)
+                }
+
+                return [];
+            },
+
+            loadCredentials() {
+                fetchCredentials();
+                this.credentials = localStorage.getItem('credentials')
+            },
+            
+            loadCommands() {
+                fetchCommands();
+                commands: localStorage.getItem('commands');
+            },
+
+            changeRoute(route) {
+                if (!['credentials', 'commands'].includes(route)) {
+                    toastr.error('Not a correct route');
+                    return true;
+                }
+
+                this.activeRoute = route;
+            },
+
+            copyCommand(content){
+                navigator.clipboard.writeText(content);
+                toastr.success('Command copied')
+            },
+
+            search() {
+                // const regex = /.*css.*/;
+                // const commands = JSON.parse(this.credentials);
+                // const filteredCommands = commands.filter((command) => {
+                //     if(regex.test(command.title)) {
+                //         return command;
+                //     }
+                // });
+
+                // console.log(filteredCommands)
+            }
+        }
+    }
+    let headers = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+        };
+
+    // RESET HEADER
+    async function resetHeader() {
+        headers = {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+        };
+
+        return headers;
+    }
+
+    // CHECKING TOKEN AND HIDE LOGIN FORM
+    function isUserLogin() {
+        if (token && token !== 'null') {
+            // drawCrdentialsTable();
+            document.querySelector(".login-section").style.display  = 'none';
+            document.querySelector(".welcome-section").style.display = 'block';
+            return true;
+        }
+        document.querySelector(".welcome-section").style.display = 'none';
+        document.querySelector(".login-section").style.display = 'block';
+    }
+
+    /** FETCH CREDENTIALS */
+    async function fetchCredentials() {
+        resetHeader();
+        try {
+            const res = await fetch(`${baseUrl}credentials`, { headers });
+            const data = await res.json();
+            if (data.data && data.data.length) {
+                localStorage.setItem('credentials', JSON.stringify(data.data));
+            }
+        } catch (error) {
+            toastr.error(error.message);
+        }
+    }
+    
+    /** FETCH COMMANDS */
+    async function fetchCommands() {
+        resetHeader();
+        try {
+            const res = await fetch(`${baseUrl}getCommands`, {method: "post"}, { headers });
+            const data = await res.json();
+            if (data.data && data.data.length) {
+                localStorage.setItem('commands', JSON.stringify(data.data));
+            }
+        } catch (error) {
+            toastr.error(error.message);
+        }
+    }
+</script>
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/toastr.js"></script>
-<script src="assets/js/script.js"></script>
+<!-- <script src="assets/js/script.js"></script> -->
+
+
 </html>
