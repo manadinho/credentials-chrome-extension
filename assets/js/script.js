@@ -1,6 +1,6 @@
 // const loginBtn = document.getElementById("loginbtn");
-// const baseUrl = "http://127.0.0.1:8000/api/";
-const baseUrl = "https://staging.denontek.com.pk/api/";
+const baseUrl = "http://127.0.0.1:8000/api/";
+// const baseUrl = "https://staging.denontek.com.pk/api/";
 // const token = localStorage.getItem("_token");
 let token;
 chrome.storage.sync.get(["_token"], (result) => {
@@ -22,12 +22,14 @@ loadCreds.addEventListener("click", fetchCredentials);
 
 // login method
 function login() {
-  $("#loginbtn").html("Loading..");
   const email = $("#email").val();
   const password = $("#password").val();
   if (!loginValidation({ email, password })) {
     return;
   }
+
+  $("#loginbtn").html("Loading..");
+  $("#loginbtn").attr("disabled", true);
 
   fetch(`${baseUrl}login`, {
     method: "post",
@@ -39,9 +41,10 @@ function login() {
   })
     .then(async (res) => {
       $("#loginbtn").html("LOGIN");
-      if (res.status === 200) {
+      $("#loginbtn").attr("disabled", false);
+      const response = await res.json();
+      if (res.status === 200 && response.success) {
         toastr.success("Login successfull");
-        const response = await res.json();
         chrome.storage.sync.set(
           {
             _token: response.access_token,
@@ -57,10 +60,13 @@ function login() {
         );
       } else {
         $("#loginbtn").html("LOGIN");
+        $("#loginbtn").attr("disabled", false);
         toastr.error("Credentials are not correct");
       }
     })
     .catch((error) => {
+      $("#loginbtn").html("LOGIN");
+      $("#loginbtn").attr("disabled", false);
       alert(error.message);
     });
 }

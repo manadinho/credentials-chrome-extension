@@ -8,26 +8,28 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/material.css">
     <link rel="stylesheet" href="assets/css/toastr.css">
+    <link rel="stylesheet" href="assets/css/tailwind.css">
 </head>
 <body>
     <div class="secure-password-popup">
-        <div class="form-container login-section">
-            <h1>Login</h1>
-    
-            <label for="email"><b>Email</b></label>
-            <input class="form-control" type="text" placeholder="Enter Email" name="email" id="email">
+        <div class="login-section border-1 shadow p-4 rounded">
+            <h1 class=" text-gray-900"><b>Login</b></h1>
+            <hr class=" text-gray-900 mt-2">
+
+            <input style="width: 100%;" class=" bg-[#d2e0fc] p-2 mt-5 border-1 shadow" type="text" placeholder="Enter Email" name="email" id="email">
             <br>
-    
-            <label for="psw"><b>Password</b></label>
-            <input class="form-control" type="password" placeholder="Enter Password" name="psw" id="password">
+            <input style="width: 100%;" class=" bg-[#d2e0fc] p-2 mt-2 border-1 shadow"f type="password" placeholder="Enter Password" name="psw" id="password">
             <br>
             
-            <button type="submit" class="btn bg-gradient-primary" id="loginbtn">Login</button>
+            <button type="submit" class="bg-gray-900 px-4 py-2 mt-2" id="loginbtn">Login</button>
         </div>
-        <div class="form-container welcome-section">
-            <h1 id="welcome-heading">SECURE PASS</h1>
-            <button id="logout" class="btn bg-gradient-warning">Logout</button>
-            <button type="submit" class="btn bg-gradient-primary" id="loadCreds">Load Credentials</button>
+        <div class="border-1 shadow p-4 rounded welcome-section">
+            <h1 id="welcome-heading" class=" text-gray-900"><b>SECURE PASS</b></h1>
+            <hr class=" text-gray-900 mt-2">
+            <div class="mt-5">
+                <button id="logout" class="bg-gray-900 px-4 py-2 mt-2 text-white">Logout</button>
+                <button type="submit" class="bg-gray-900 px-4 py-2 mt-2 text-white" id="loadCreds">Load Credentials</button>
+            </div>
             <table class="table" id="table1">
                 <thead>
                     <tr>
