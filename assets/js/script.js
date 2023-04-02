@@ -1,6 +1,6 @@
 // const loginBtn = document.getElementById("loginbtn");
-const baseUrl = "http://127.0.0.1:8000/api/";
-// const baseUrl = "https://staging.denontek.com.pk/api/";
+// const baseUrl = "http://127.0.0.1:8000/api/";
+const baseUrl = "https://staging.denontek.com.pk/api/";
 // const token = localStorage.getItem("_token");
 let token;
 chrome.storage.sync.get(["_token"], (result) => {
@@ -132,13 +132,14 @@ function drawCrdentialsTable() {
   let tbody = ``;
   chrome.storage.local.get(["credentials"], (result) => {
     const credentials = JSON.parse(result.credentials);
+
     if (credentials && credentials.length) {
       for (let cred of credentials) {
         tbody += `<tr><td>
             <div class="d-flex px-2 py-1">
                 <div>
                     <img style="height:16px" src="${
-                      cred.plateform.favicon || "./assets/images/logo.png"
+                      cred?.plateform?.favicon || "./assets/images/logo.png"
                     }" class="rounded-circle me-2">
                 </div>
                 <div class="d-flex flex-column justify-content-center">
